@@ -22,6 +22,10 @@ public class Deck {
      */
     public Deck() {load_deck();}
 
+    /**
+     * This method will load the <b>Virtual Deck</b>'s'
+     * <i>Suits</i> and <i>Cards</i> as <code>Integer</code> from 0 to 3 and 0 to 12.
+     */
     private static void load_deck() {
 
         // Foor-loop for each suit
@@ -35,6 +39,33 @@ public class Deck {
                 deck.get(i).add(j);
             }
         }
+    }
+
+    /**
+     * Simple method to get Suit Name by Number.
+     * @param suit The suit number as <code>Integer</code>.
+     * @return SuitName as <code>String</code>.
+     */
+    public static String getSuit(int suit) {
+        String suitName = "";
+
+        // Then we set that suit with real value
+        switch(suit) {
+            case 0:
+                suitName = "Clubs";
+                break;
+            case 1:
+                suitName = "Spades";
+                break;
+            case 2:
+                suitName = "Hearts";
+                break;
+            case 3:
+                suitName = "Diamonds";
+                break;
+        }
+
+        return suitName;
     }
     
 }

@@ -1,6 +1,9 @@
 package deck;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;;
 
 /**
  * <i>Abstract Class</i> for multiple uses of a <b>Virtual Deck</b>. <br/>
@@ -108,6 +111,84 @@ public abstract class AbstractDeck {
             }
         }
     }
+
+    /**
+     * This method sorts a {@code 2D ArrayList} <b>Virtual Deck</b> declared in params.
+     * @param deck The {@code 2D ArrayList} to sort.
+     * @return The same {@code 2D ArrayList} declared in params but sorted.
+     */
+    public static ArrayList<ArrayList<Integer>> sortDeck(ArrayList<ArrayList<Integer>> deck) {
+        Collections.sort(deck, new Comparator<ArrayList<Integer>>() {
+            @Override
+            public int compare(ArrayList<Integer> o1, ArrayList<Integer> o2){
+                return o1.get(0).compareTo(o2.get(0));
+            }
+        });
+        return deck;
+    }
+
+    /**
+     * Simple method to get Suit Name by number. <br/>
+     * For playing with Spanish Deck you must Override this method.
+     * @param suit The number of the card from 0 to 3.
+     * @return That suit's name.
+     */
+    public String getSuit(int suit) {
+        switch(suit){
+            case 0:
+                return "Clubs";
+            case 1:
+                return "Spades";
+            case 2:
+                return "Hearts";
+            case 3:
+                return "Diamonds";
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Simple method to get Card Name by number. <br/>
+     * For playing with Spanish Deck you must Override this method.
+     * @param card The number of the card from 0 to 12.
+     * @return That card's name.
+     */
+    public String getCard(int card) {
+        switch(card) {
+            case 0:
+                return "Ace";
+            case 10:
+                return "Jack";
+            case 11:
+                return "Queen";
+            case 12:
+                return "King";
+            default:
+                return Integer.toString(card + 1);
+        }
+    }
+
+    /**
+     * This method parse to a readable String the <b>Virtual Deck</b>
+     * @param deck The {@code 2D ArrayList} to parse String.
+     * @return A readable version of the {@code 2D ArrayList} <b>Virtual Deck</b>.
+     */
+    public static String deckToString(ArrayList<ArrayList<Integer>> deck) {
+        return Arrays.deepToString(deck.toArray());
+    }
+
+    /**
+     * This method will give every Player the corresponding cards as a {@code 2D String Array}.
+     * @return Dealed cards as {@code 2D String Array}.
+     */
+    public abstract String[][] dealStringCards();
+
+    /**
+     * This method will give every Player the corresponding cards as a {@code 2D ArrayList}.
+     * @return Dealed cards as {@code 2D ArrayList}.
+     */
+    public abstract ArrayList<ArrayList<Integer>> dealArrayListCards();
 
     
 }

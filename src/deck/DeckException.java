@@ -9,11 +9,3 @@ public class DeckException extends Exception {
     }
     
 }
-
-public class outOfBoundDeckException extends Exception {
-
-    public outOfBoundDeckException(byte bound, String error) {
-        super(error + "\nYou exceed the maximum bound: " + bound);
-    }
-
-}

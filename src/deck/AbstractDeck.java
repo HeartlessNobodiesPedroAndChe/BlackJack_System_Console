@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;;
 
 /**
- * <i>Abstract Class</i> for multiple uses of a <b>Virtual Deck</b>. <br/>
+ * <i>Abstract Class</i> for multiple uses of a <b>Virtual Deck</b>. <br>
  * This abstract Class will be the base for other types of deck such as:
  * <ul>
  * <li>Poker Deck (without jokers)</li>
@@ -72,7 +72,7 @@ public abstract class AbstractDeck {
     }
 
     /**
-     * This method check if must be any Joker in the <b>Virtual Deck</b> and fills it. <br/>
+     * This method check if must be any Joker in the <b>Virtual Deck</b> and fills it. <br>
      * The <b>Virtual Deck</b> it's filled by the following steps:
      * <ul>
      * <li>From 0 to {@code numberOfSuits - 1} will be the Suits (Clubs, Spades, Hearts, Diamonds and Jokers).</li>
@@ -128,29 +128,53 @@ public abstract class AbstractDeck {
     }
 
     /**
-     * Simple method to get Suit Name by number. <br/>
+     * Simple method to get Suit Name by number. <br>
      * For playing with Spanish Deck you must Override this method.
-     * @param suit The number of the card from 0 to 3.
+     * @param suit The number of the card from 0 to 3 (from 0 to 4 if there's any Joker).
      * @return That suit's name.
+     * @exception DeckException In case you exceed the maximum bound setted for that Deck.
      */
-    public String getSuit(int suit) {
-        switch(suit){
-            case 0:
-                return "Clubs";
-            case 1:
-                return "Spades";
-            case 2:
-                return "Hearts";
-            case 3:
-                return "Diamonds";
-            default:
-                return null;
+    public String getSuit(int suit) throws DeckException {
+        if (this.singleJoker || this.dualJoker) {
+            if (suit > 4)
+                throw new DeckException("You've exceed the maximum bound ("+suit+").");
+            switch(suit){
+                case 0:
+                    return "Clubs";
+                case 1:
+                    return "Spades";
+                case 2:
+                    return "Hearts";
+                case 3:
+                    return "Diamonds";
+                case 4:
+                    return "Jokers";
+                default:
+                    throw new DeckException("You can't set negative suits. ("+suit+").");
+            }
+        } else {
+            if (suit > 3)
+                throw new DeckException("You've exceed the maximum bound ("+suit+").");
+            switch(suit){
+                case 0:
+                    return "Clubs";
+                case 1:
+                    return "Spades";
+                case 2:
+                    return "Hearts";
+                case 3:
+                    return "Diamonds";
+                default:
+                    throw new DeckException("You can't set negative suits. ("+suit+").");
+            }
         }
     }
 
     /**
-     * Simple method to get Card Name by number. <br/>
-     * For playing with Spanish Deck you must Override this method.
+     * Simple method to get Card Name by number. <br>
+     * For playing with Spanish Deck you must Override this method. <br>
+     * This method <b>DOES NOT CHECK</b> Joker card. <br>
+     * Please use {@code getCard(int suit, int card)} if you are using Joker.
      * @param card The number of the card from 0 to 12.
      * @return That card's name.
      */
@@ -166,6 +190,27 @@ public abstract class AbstractDeck {
                 return "King";
             default:
                 return Integer.toString(card + 1);
+        }
+    }
+
+    /**
+     * Simple method specifically made for getting Joker. <br>
+     * The system works exactly like {@code getCard(int card)} but getting Jokers if it concerns.
+     * @param suit The number of the suit from 0 to 4.
+     * @param card The number of the card from 0 to 12 (0 to 1 if it has Jokers).
+     */
+    public String getCard(int suit, int card) throws DeckException {
+        if(this.singleJoker || this.dualJoker) {
+            if (suit > 4 || suit < 0)
+                throw new DeckException("You've exceed the bounds. ("+suit+")");
+            switch(suit) {
+                case 4:
+                    return "Joker";
+                default:
+                    return getCard(card);
+            }
+        } else {
+            return getCard(card);
         }
     }
 

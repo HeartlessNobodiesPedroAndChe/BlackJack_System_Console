@@ -6,7 +6,7 @@
 
 package launcher;
 
-import gameplay.*;
+import deck.*;
 
 /**
  * Launcher Class for the program to start
@@ -14,7 +14,7 @@ import gameplay.*;
 public class Main {
 
     public static void main(String[] args) {
-        
+        Deck deck = new Deck();
     }
 
 }

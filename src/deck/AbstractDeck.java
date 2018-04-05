@@ -3,7 +3,6 @@ package deck;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;;
 
 /**
  * <i>Abstract Class</i> for multiple uses of a <b>Virtual Deck</b>. <br>
@@ -81,8 +80,8 @@ public abstract class AbstractDeck {
      * </ul>
      */
     private void loadDeck(){
-        byte numberOfSuits;
-        byte numberOfCards = 13;
+        int numberOfSuits;
+        int numberOfCards = 13;
 
         // Checking if there's any Joker in the Deck
         if(this.singleJoker || this.dualJoker) {
@@ -118,12 +117,14 @@ public abstract class AbstractDeck {
      * @return The same {@code 2D ArrayList} declared in params but sorted.
      */
     public static ArrayList<ArrayList<Integer>> sortDeck(ArrayList<ArrayList<Integer>> deck) {
+        /* - - - DEPRECATED - - -
         Collections.sort(deck, new Comparator<ArrayList<Integer>>() {
             @Override
             public int compare(ArrayList<Integer> o1, ArrayList<Integer> o2){
                 return o1.get(0).compareTo(o2.get(0));
             }
-        });
+        });*/
+        Collections.sort(deck, (ArrayList<Integer> o1, ArrayList<Integer> o2) -> o1.get(0).compareTo(o2.get(0)));
         return deck;
     }
 
@@ -171,6 +172,45 @@ public abstract class AbstractDeck {
     }
 
     /**
+     * Simple method to get Suit Number by its name. <br>
+     * For playing with Spanish Deck you must Override this method.
+     * @param suit The name of the suit.
+     * @return The <b>virtual number</b> in the Deck of that suit.
+     * @exception DeckException In case you exceed the bound setted for that Deck.
+     */
+    public int getSuit(String suit) throws DeckException {
+        if (this.singleJoker || this.dualJoker) {
+            switch(suit) {
+                case "Clubs":
+                    return 0;
+                case "Spades":
+                    return 1;
+                case "Hearts":
+                    return 2;
+                case "Diamonds":
+                    return 3;
+                case "Jokers":
+                    return 4;
+                default:
+                    throw new DeckException("The suit ("+suit+") in not recognized.");
+            }
+        } else {
+            switch(suit) {
+                case "Clubs":
+                    return 0;
+                case "Spades":
+                    return 1;
+                case "Hearts":
+                    return 2;
+                case "Diamonds":
+                    return 3;
+                default:
+                    throw new DeckException("The suit ("+suit+") in not recognized.");
+            }
+        }
+    }
+
+    /**
      * Simple method to get Card Name by number. <br>
      * For playing with Spanish Deck you must Override this method. <br>
      * This method <b>DOES NOT CHECK</b> Joker card. <br>
@@ -198,6 +238,8 @@ public abstract class AbstractDeck {
      * The system works exactly like {@code getCard(int card)} but getting Jokers if it concerns.
      * @param suit The number of the suit from 0 to 4.
      * @param card The number of the card from 0 to 12 (0 to 1 if it has Jokers).
+     * @return That card's name.
+     * @exception DeckException In case you exceed the bound setted for that Deck.
      */
     public String getCard(int suit, int card) throws DeckException {
         if(this.singleJoker || this.dualJoker) {
@@ -206,6 +248,51 @@ public abstract class AbstractDeck {
             switch(suit) {
                 case 4:
                     return "Joker";
+                default:
+                    return getCard(card);
+            }
+        } else {
+            return getCard(card);
+        }
+    }
+
+    /**
+     * Simple method to get Card Number by its name. <br>
+     * For playing with Spanish Deck you must Override this method. <br>
+     * This method <b>DOES NOT CHECK</b> Joker card. <br>
+     * Please use {@code getCard(String suit, String card)} if you are using Joker.
+     * @param card The name of the card.
+     * @return The <b>virtual number</b> of that card in the Deck.
+     */
+    public int getCard(String card) {
+        switch(card) {
+            case "Ace":
+                return 0;
+            case "Jack":
+                return 10;
+            case "Queen":
+                return 11;
+            case "King":
+                return 12;
+            default:
+                return Integer.parseInt(card) - 1;
+        }
+    }
+
+    /**
+     * Simple method specifically made for getting Joker. <br>
+     * The system works exactly like {@code getCard(int card)} but getting Jokers if it concerns.
+     * @param suit The name of the suit.
+     * @param card The name of the card.
+     * @return That card's value
+     * @exception DeckException In case you exceed the bound setted for that Deck.
+     */
+    public int getCard(String suit, String card) throws DeckException {
+        if(this.singleJoker || this.dualJoker) {
+            switch(suit) {
+                case "Jokers":
+                    // We will return 1 in case 0 is in "Jokers" suit or 0 in case is not.
+                    return this.deck.get(this.getSuit(suit)).contains(0)?1:0;
                 default:
                     return getCard(card);
             }
@@ -224,6 +311,29 @@ public abstract class AbstractDeck {
     }
 
     /**
+     * Returns a readable String of the available cards by Suit and Card. <br>
+     * The String will have this format: <br>
+     * ---SUIT---
+     *      · Card
+     * @return An eye-friendly String of the <b>Virtual Deck</b> 
+     */
+    @Override
+    public String toString() {
+        String readableDeck = "";
+        try {
+            for (int i = 0; i < this.deck.size(); ++i) {
+                readableDeck += "---" + this.getSuit(i).toUpperCase() + "---\n";
+                for (int j = 0; j < this.deck.get(i).size(); ++j) {
+                    readableDeck += "    ·" + this.getCard(i, this.deck.get(i).get(j)) + "\n";
+                }
+            }
+        } catch (DeckException e) {
+            System.err.println(e.getMessage());
+        }
+        return readableDeck;
+    }
+
+    /**
      * This method will give every Player the corresponding cards as a {@code 2D String Array}.
      * @return Dealed cards as {@code 2D String Array}.
      */
@@ -234,6 +344,12 @@ public abstract class AbstractDeck {
      * @return Dealed cards as {@code 2D ArrayList}.
      */
     public abstract ArrayList<ArrayList<Integer>> dealArrayListCards();
+
+    /**
+     * This getter returns the <b>literal</b> {@literal ArrayList<ArrayList<Integer>> deck}.
+     * @return The object's {@code 2D ArrayList}.
+     */
+    public ArrayList<ArrayList<Integer>> getDeck(){return this.deck;}
 
     
 }

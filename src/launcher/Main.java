@@ -14,7 +14,8 @@ import deck.*;
 public class Main {
 
     public static void main(String[] args) {
-        PokerDeck deck = new PokerDeck();
+        PokerDeck deck = new PokerDeck(true, true);
+        System.out.println(deck.toString());
         
     }
 

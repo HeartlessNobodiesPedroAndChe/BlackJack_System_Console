@@ -12,28 +12,31 @@ import java.util.Collections;
  * <li>Spanish Deck (without jokers)</li>
  * <li>Joker Deck (with one joker)</li>
  * </ul>
- * And future implements.
+ * The Class is based on an <b>Abstract Deck</b> ({@literal 2D ArrayList<Integer>}) and a readable
+ * <b>Virtual Deck</b> (String[][]) so we can read it.
  * 
  * @author LeCuay
- * @version 0.1 Early
+ * @version 1.0 Early
  * @see ArrayList
+ * @see Arrays
+ * @see Collections
  */
 public abstract class AbstractDeck {
 
     /**
      * The <b>Virtual Deck</b> is based on a <i>Dual ArrayList</i>  so cards' management will be way easier.
      */
-    private ArrayList<ArrayList<Integer>> deck = new ArrayList<>();
+    protected ArrayList<ArrayList<Integer>> deck = new ArrayList<>();
 
     /**
      * This boolean will set one Joker in our deck.
      */
-    private boolean singleJoker = false;
+    protected boolean singleJoker = false;
 
     /**
      * This boolean will set two jokers in our deck.
      */
-    private boolean dualJoker = false;
+    protected boolean dualJoker = false;
 
     /**
      * The empty constructor automatically loads a deck without Jokers.
@@ -313,8 +316,7 @@ public abstract class AbstractDeck {
     /**
      * Returns a readable String of the available cards by Suit and Card. <br>
      * The String will have this format: <br>
-     * ---SUIT---
-     *      · Card
+     * SUIT: [Card, Card, Card...]
      * @return An eye-friendly String of the <b>Virtual Deck</b> 
      */
     @Override
@@ -322,10 +324,13 @@ public abstract class AbstractDeck {
         String readableDeck = "";
         try {
             for (int i = 0; i < this.deck.size(); ++i) {
-                readableDeck += "---" + this.getSuit(i).toUpperCase() + "---\n";
+                readableDeck += this.getSuit(i).toUpperCase() + ": [";
                 for (int j = 0; j < this.deck.get(i).size(); ++j) {
-                    readableDeck += "    ·" + this.getCard(i, this.deck.get(i).get(j)) + "\n";
+                    readableDeck += this.getCard(i, this.deck.get(i).get(j));
+                    if(j != this.deck.get(i).size() - 1)
+                        readableDeck += ", ";
                 }
+                readableDeck += "]\n";
             }
         } catch (DeckException e) {
             System.err.println(e.getMessage());
@@ -336,20 +341,34 @@ public abstract class AbstractDeck {
     /**
      * This method will give every Player the corresponding cards as a {@code 2D String Array}.
      * @return Dealed cards as {@code 2D String Array}.
+     * @exception DeckException In case you exceed the bound setted for that Deck.
      */
-    public abstract String[][] dealStringCards();
+    public abstract String[][] dealStringCards() throws DeckException;
 
     /**
      * This method will give every Player the corresponding cards as a {@code 2D ArrayList}.
      * @return Dealed cards as {@code 2D ArrayList}.
+     * @exception DeckException In case you exceed the bound setted for that Deck.
      */
-    public abstract ArrayList<ArrayList<Integer>> dealArrayListCards();
+    public abstract ArrayList<ArrayList<Integer>> dealArrayListCards() throws DeckException;
 
     /**
-     * This getter returns the <b>literal</b> {@literal ArrayList<ArrayList<Integer>> deck}.
+     * This getter returns the <b>literal</b> <code>{@literal ArrayList<ArrayList<Integer>>}</code> deck.
      * @return The object's {@code 2D ArrayList}.
      */
     public ArrayList<ArrayList<Integer>> getDeck(){return this.deck;}
+
+    /**
+     * This getter checks if {@code boolean singleJoker} is activated.
+     * @return {@code true or false} depending on the {@code singleJoker} variable.
+     */
+    public boolean isSingleJoker(){return this.singleJoker;}
+
+    /**
+     * This getter checks if {@code boolean dualJoker} is activated.
+     * @return {@code true or false} depending on the {@code dualJoker} variable.
+     */
+    public boolean isDualJoker(){return this.dualJoker;}
 
     
 }

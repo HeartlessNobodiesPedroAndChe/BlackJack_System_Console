@@ -23,3 +23,13 @@ hs_err_pid*
 
 # Compiled files
 bin/
+
+# Enviorements (IDE)
+# Visual Studio
+.vscode/
+
+# NetBeans
+nbproject/
+build.xml
+manifest.mf
+

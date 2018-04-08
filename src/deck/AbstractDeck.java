@@ -39,6 +39,11 @@ public abstract class AbstractDeck {
     protected boolean dualJoker = false;
 
     /**
+     * This boolean is true if there's any card in the deck and false otherwise.
+     */
+    protected boolean cardsInDeck = true;
+
+    /**
      * The empty constructor automatically loads a deck without Jokers.
      */
     protected AbstractDeck(){this.loadDeck();}
@@ -142,6 +147,8 @@ public abstract class AbstractDeck {
         if (this.singleJoker || this.dualJoker) {
             if (suit > 4)
                 throw new DeckException("You've exceed the maximum bound ("+suit+").");
+            if (suit < 0)
+                throw new DeckException("You can't set negative suits. ("+suit+").");
             switch(suit){
                 case 0:
                     return "Clubs";
@@ -154,7 +161,7 @@ public abstract class AbstractDeck {
                 case 4:
                     return "Jokers";
                 default:
-                    throw new DeckException("You can't set negative suits. ("+suit+").");
+                    throw new DeckException("The suit number ("+suit+") is not allowed");
             }
         } else {
             if (suit > 3)
@@ -220,8 +227,11 @@ public abstract class AbstractDeck {
      * Please use {@code getCard(int suit, int card)} if you are using Joker.
      * @param card The number of the card from 0 to 12.
      * @return That card's name.
+     * @exception DeckException In case you exceed the bound setted for that Deck.
      */
-    public String getCard(int card) {
+    public String getCard(int card) throws DeckException{
+        if(card > 12 || card < 0)
+            throw new DeckException("You've exceed the bounds. ("+card+")");
         switch(card) {
             case 0:
                 return "Ace";
@@ -255,7 +265,21 @@ public abstract class AbstractDeck {
                     return getCard(card);
             }
         } else {
-            return getCard(card);
+            if (card > 12 || card < 0)
+                throw new DeckException("You've exceed the bounds. ("+card+")");
+            switch(deck.get(suit).get(card)) {
+                case 0:
+                    return "Ace";
+                case 10:
+                    return "Jack";
+                case 11:
+                    return "Queen";
+                case 12:
+                    return "King";
+                // Default will get any other value (2 - 10)
+                default:
+                    return Integer.toString(deck.get(suit).get(card) + 1);
+            }
         }
     }
 
@@ -266,8 +290,9 @@ public abstract class AbstractDeck {
      * Please use {@code getCard(String suit, String card)} if you are using Joker.
      * @param card The name of the card.
      * @return The <b>virtual number</b> of that card in the Deck.
+     * @exception DeckException In case you set something not allowed.
      */
-    public int getCard(String card) {
+    public int getCard(String card) throws DeckException {
         switch(card) {
             case "Ace":
                 return 0;
@@ -278,7 +303,10 @@ public abstract class AbstractDeck {
             case "King":
                 return 12;
             default:
-                return Integer.parseInt(card) - 1;
+                if (!card.matches("[\\d]"))
+                    throw new DeckException(card + " is not a Card neither a number.");
+                else
+                    return Integer.parseInt(card) - 1;
         }
     }
 
@@ -305,6 +333,25 @@ public abstract class AbstractDeck {
     }
 
     /**
+     * Simple method to check if there's next card in a suit by Suit Number.
+     * @param suit The number of that suit in the <b>Virtual Deck</b>.
+     * @return {@code true or false} depending on cards left in the suit.
+     */
+    public boolean hasNextCardInSuit(int suit) {
+        return !deck.get(suit).isEmpty();                                                                                                                                                                             
+    }
+
+    /**
+     * Simple method to check if there's any card in the <b>Virtual Deck</b>.
+     * @return {@code true or false} depending on cards left in the deck.
+     */
+    public boolean hasNextCard() {
+        if(deck.isEmpty())
+            cardsInDeck = false;
+        return !deck.isEmpty();
+    }
+
+    /**
      * This method parse to a readable String the <b>Virtual Deck</b>
      * @param deck The {@code 2D ArrayList} to parse String.
      * @return A readable version of the {@code 2D ArrayList} <b>Virtual Deck</b>.
@@ -317,25 +364,28 @@ public abstract class AbstractDeck {
      * Returns a readable String of the available cards by Suit and Card. <br>
      * The String will have this format: <br>
      * SUIT: [Card, Card, Card...]
-     * @return An eye-friendly String of the <b>Virtual Deck</b> 
+     * @return An eye-friendly String of the <b>Virtual Deck</b>
+     * @see StringBuilder
      */
     @Override
     public String toString() {
-        String readableDeck = "";
+        java.lang.StringBuilder readableDeck = new StringBuilder("");
         try {
-            for (int i = 0; i < this.deck.size(); ++i) {
-                readableDeck += this.getSuit(i).toUpperCase() + ": [";
-                for (int j = 0; j < this.deck.get(i).size(); ++j) {
-                    readableDeck += this.getCard(i, this.deck.get(i).get(j));
-                    if(j != this.deck.get(i).size() - 1)
-                        readableDeck += ", ";
+            for(ArrayList<Integer> array: deck) {
+                readableDeck.append(getSuit(deck.indexOf(array)).toUpperCase() + ": [");
+                for(Integer card: array) {
+                    readableDeck.append(getCard(card) + ", ");
                 }
-                readableDeck += "]\n";
+                readableDeck.delete(readableDeck.length() - 2, readableDeck.length());
+                if(!array.isEmpty())
+                    readableDeck.append("]\n");
+                else
+                    readableDeck.append("\n");
             }
         } catch (DeckException e) {
             System.err.println(e.getMessage());
         }
-        return readableDeck;
+        return readableDeck.toString();
     }
 
     /**
@@ -369,6 +419,12 @@ public abstract class AbstractDeck {
      * @return {@code true or false} depending on the {@code dualJoker} variable.
      */
     public boolean isDualJoker(){return this.dualJoker;}
+
+    /**
+     * This getter if there's any card left in the Deck.
+     * @return {@code true or false} depending on the {@code cardsInDeck} variable. 
+     */
+    public boolean isCardsInDeck(){return this.cardsInDeck;}
 
     
 }

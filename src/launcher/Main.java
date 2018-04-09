@@ -7,6 +7,7 @@
 package launcher;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 
 import deck.AbstractDeck;
 import deck.PokerDeck;
@@ -20,7 +21,9 @@ public class Main {
     public static void main(String[] args) {
         PokerDeck deck = new PokerDeck(true, true);
         try {
-            System.out.println(Arrays.deepToString(deck.dealArrayListCards().toArray()));
+            ArrayList<ArrayList<Integer>> handholdCards = deck.dealArrayListCards();
+            String[][] parsedArray = deck.parseArray(handholdCards);
+            System.out.println(AbstractDeck.deckToString(parsedArray));
         } catch(DeckException e) {
             System.err.println(e.getMessage());
         }

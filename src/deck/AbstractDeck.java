@@ -303,10 +303,11 @@ public abstract class AbstractDeck {
             case "King":
                 return 12;
             default:
-                if (!card.matches("[\\d]"))
-                    throw new DeckException(card + " is not a Card neither a number.");
-                else
+                try {
                     return Integer.parseInt(card) - 1;
+                } catch (NumberFormatException e) {
+                   throw new DeckException(card + " is not a Card neither a Number.");
+                }
         }
     }
 
@@ -330,6 +331,22 @@ public abstract class AbstractDeck {
         } else {
             return getCard(card);
         }
+    }
+
+    /**
+     * This method will parse a {@code 2D ArrayList} into a {@code String[][]}.
+     * @param deck the {@code 2D ArrayList} to parse.
+     * @return The {@code String[][]} deck.
+     * @exception DeckException from {@code getCard()} method.
+     */
+    public String[][] parseArray(ArrayList<ArrayList<Integer>> deck) throws DeckException {
+        String[][] parsedDeck = new String[deck.size()][2];
+        for(int i = 0; i < parsedDeck.length; ++i) {
+            parsedDeck[i][0] = getSuit(deck.get(i).get(0));
+            parsedDeck[i][1] = getCard(deck.get(i).get(1));
+        }
+
+        return parsedDeck;
     }
 
     /**
@@ -358,6 +375,22 @@ public abstract class AbstractDeck {
      */
     public static String deckToString(ArrayList<ArrayList<Integer>> deck) {
         return Arrays.deepToString(deck.toArray());
+    }
+
+    /**
+     * This method parse to a readable String the <b>Virtual Deck</b>
+     * @param deck The {@code String[][]} to parse String.
+     * @return A readable version of the {@code String[][]} <b>Virtual Deck</b>.
+     */
+    public static String  deckToString(String[][] deck) {
+        java.lang.StringBuilder readableDeck = new StringBuilder("[");
+        for(String[] suit: deck) {
+            readableDeck.append(Arrays.deepToString(suit) + ", ");
+        }
+        readableDeck.delete(readableDeck.length() - 2, readableDeck.length());
+        readableDeck.append("]");
+
+        return readableDeck.toString();
     }
 
     /**

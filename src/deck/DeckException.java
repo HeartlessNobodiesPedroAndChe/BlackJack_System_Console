@@ -11,6 +11,7 @@ public class DeckException extends Exception {
 
     public DeckException(String unknownError) {
         super(unknownError);
+        System.err.println("Error at line: " + getStackTrace()[0].getLineNumber());
     }
     
 }

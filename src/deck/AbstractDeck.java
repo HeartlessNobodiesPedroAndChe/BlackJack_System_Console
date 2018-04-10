@@ -164,7 +164,7 @@ public abstract class AbstractDeck {
                     throw new DeckException("The suit number ("+suit+") is not allowed");
             }
         } else {
-            if (suit > 3)
+            if (suit > 3 || suit < 0)
                 throw new DeckException("You've exceed the maximum bound ("+suit+").");
             switch(suit){
                 case 0:
@@ -176,7 +176,7 @@ public abstract class AbstractDeck {
                 case 3:
                     return "Diamonds";
                 default:
-                    throw new DeckException("You can't set negative suits. ("+suit+").");
+                    throw new DeckException(suit + " is not allowed.");
             }
         }
     }
@@ -334,7 +334,11 @@ public abstract class AbstractDeck {
     }
 
     /**
-     * This method will parse a {@code 2D ArrayList} into a {@code String[][]}.
+     * This method will parse a {@code 2D ArrayList} into a {@code String[][]}. <br>
+     * The {@code String[][]} returned is based on two values: <b>Suit</b> and <b>Card</b>. <br>
+     * <pre>
+     * String[size of the {@code deck}][2] //[0] = Suit; [1] = Card;
+     * </pre>
      * @param deck the {@code 2D ArrayList} to parse.
      * @return The {@code String[][]} deck.
      * @exception DeckException from {@code getCard()} method.
@@ -350,12 +354,40 @@ public abstract class AbstractDeck {
     }
 
     /**
+     * This method will parse a {@code String[][]} into a {@code 2D ArrayList}. <br>
+     * The {@code 2D ArrayList} returned is based on two values: <b>Suit</b> and <b>Card</b>. <br>
+     * [0] = Suit; [1] = Card;
+     * @param deck the {@code String[][]} to parse.
+     * @return The {@code 2D ArrayList} deck.
+     * @exception DeckException from {@code getCard()} method.
+     */
+    public ArrayList<ArrayList<Integer>> parseArray(String[][] deck) throws DeckException {
+        ArrayList<ArrayList<Integer>> parsedDeck = new ArrayList<>();
+        for (int i = 0; i < deck.length; ++i) {
+            parsedDeck.add(new ArrayList<>());
+            parsedDeck.get(i).add(getSuit(String[i][0]));
+            parsedDeck.get(i).add(getCard(String[i][1]));
+        }
+
+        return parsedDeck;
+    }
+
+    /**
      * Simple method to check if there's next card in a suit by Suit Number.
      * @param suit The number of that suit in the <b>Virtual Deck</b>.
      * @return {@code true or false} depending on cards left in the suit.
      */
     public boolean hasNextCardInSuit(int suit) {
         return !deck.get(suit).isEmpty();                                                                                                                                                                             
+    }
+
+    /**
+     * Simple method to check if there's next card in a suit by Suit Name.
+     * @param suit The name of that suit in the <b>Virtual Deck</b>.
+     * @return {@code true or false} depending on cards left in the suit.
+     */
+    public boolean hasNextCardInSuit(String suit) {
+        return !deck.get(getSuit(suit)).isEmpty();
     }
 
     /**

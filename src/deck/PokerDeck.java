@@ -40,10 +40,10 @@ public class PokerDeck extends AbstractDeck{
         // This for-each loop will do 5 loops.
         for (String[] dealedCard: dealedCards) {
             // We get random suit (from 0 to the number of suits)
-            int suit = random.nextInt(this.deck.size() - 1);
+            int suit = random.nextInt(this.deck.size());
             dealedCard[0] = this.getSuit(suit);
             // We get random card in that suit (from 0 to the number of cards)
-            int card = random.nextInt(this.deck.get(suit).size() - 1);
+            int card = random.nextInt(this.deck.get(suit).size());
             dealedCard[1] = this.getCard(suit, card);
             // Removing dealed card from the Virtual Deck
             this.deck.get(suit).remove(card);
@@ -66,10 +66,10 @@ public class PokerDeck extends AbstractDeck{
             dealedCards.add(i, new ArrayList<>());
 
             // We get random suit (from 0 to the number of suits)
-            int suit = random.nextInt(this.deck.size() - 1);
+            int suit = random.nextInt(this.deck.size());
             dealedCards.get(i).add(0, suit);
             // We get random card in that suit (from 0 to the number of cards)
-            int card = random.nextInt(this.deck.get(suit).size() - 1);
+            int card = random.nextInt(this.deck.get(suit).size());
             dealedCards.get(i).add(1, this.getCard(this.getSuit(suit), this.getCard(card)));
             // Removing dealed card from the Virtual Deck
             this.deck.get(suit).remove(card);

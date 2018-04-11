@@ -365,8 +365,8 @@ public abstract class AbstractDeck {
         ArrayList<ArrayList<Integer>> parsedDeck = new ArrayList<>();
         for (int i = 0; i < deck.length; ++i) {
             parsedDeck.add(new ArrayList<>());
-            parsedDeck.get(i).add(getSuit(String[i][0]));
-            parsedDeck.get(i).add(getCard(String[i][1]));
+            parsedDeck.get(i).add(getSuit(deck[i][0]));
+            parsedDeck.get(i).add(getCard(deck[i][1]));
         }
 
         return parsedDeck;
@@ -387,7 +387,13 @@ public abstract class AbstractDeck {
      * @return {@code true or false} depending on cards left in the suit.
      */
     public boolean hasNextCardInSuit(String suit) {
-        return !deck.get(getSuit(suit)).isEmpty();
+        try {
+            return !deck.get(getSuit(suit)).isEmpty();
+        } catch (DeckException e) {
+            System.err.println(e.getMessage());
+            System.exit(0);
+            return false;
+        }
     }
 
     /**

@@ -21,7 +21,7 @@ import java.util.Collections;
  * @see Arrays
  * @see Collections
  */
-public abstract class AbstractDeck {
+public class Deck {
 
     /**
      * The <b>Virtual Deck</b> is based on a <i>Dual ArrayList</i>  so cards' management will be way easier.
@@ -46,13 +46,13 @@ public abstract class AbstractDeck {
     /**
      * The empty constructor automatically loads a deck without Jokers.
      */
-    protected AbstractDeck(){this.loadDeck();}
+    protected Deck(){this.loadDeck();}
 
     /**
      * This constructor allows the user to put a Joker in the deck.
      * @param singleJoker The boolean must be <code>true</code> if you want a Joker in the <b>Virtual Deck</b>.
      */
-    protected AbstractDeck(boolean singleJoker){
+    protected Deck(boolean singleJoker){
         this.singleJoker = singleJoker;
         this.loadDeck();
     }
@@ -62,7 +62,7 @@ public abstract class AbstractDeck {
      * @param singleJoker In order to avoid having 3 Jokers will be set {@code false} by default.
      * @param dualJoker The boolean must be <code>true</code> if you want two Jokers in the <b>Virtual Deck</b>.
      */
-    protected AbstractDeck(boolean singleJoker, boolean dualJoker){
+    protected Deck(boolean singleJoker, boolean dualJoker){
         // Setting default value
         singleJoker = false;
 
@@ -74,7 +74,7 @@ public abstract class AbstractDeck {
      * This constructor allows the user to use a custom <b>Virtual Deck</b>.
      * @param deck The deck you want to play with as <code>{@literal ArrayList<ArrayList<Integer>>}</code>.
      */
-    protected AbstractDeck(ArrayList<ArrayList<Integer>> deck){
+    protected Deck(ArrayList<ArrayList<Integer>> deck){
         this.deck = deck;
     }
 
@@ -423,7 +423,7 @@ public abstract class AbstractDeck {
     public static String  deckToString(String[][] deck) {
         java.lang.StringBuilder readableDeck = new StringBuilder("[");
         for(String[] suit: deck) {
-            readableDeck.append(Arrays.deepToString(suit) + ", ");
+            readableDeck.append(Arrays.deepToString(suit)).append(", ");
         }
         readableDeck.delete(readableDeck.length() - 2, readableDeck.length());
         readableDeck.append("]");
@@ -443,9 +443,9 @@ public abstract class AbstractDeck {
         java.lang.StringBuilder readableDeck = new StringBuilder("");
         try {
             for(ArrayList<Integer> array: deck) {
-                readableDeck.append(getSuit(deck.indexOf(array)).toUpperCase() + ": [");
+                readableDeck.append(getSuit(deck.indexOf(array)).toUpperCase()).append(": [");
                 for(Integer card: array) {
-                    readableDeck.append(getCard(card) + ", ");
+                    readableDeck.append(getCard(card)).append(", ");
                 }
                 readableDeck.delete(readableDeck.length() - 2, readableDeck.length());
                 if(!array.isEmpty())
@@ -458,20 +458,6 @@ public abstract class AbstractDeck {
         }
         return readableDeck.toString();
     }
-
-    /**
-     * This method will give every Player the corresponding cards as a {@code 2D String Array}.
-     * @return Dealed cards as {@code 2D String Array}.
-     * @exception DeckException In case you exceed the bound setted for that Deck.
-     */
-    public abstract String[][] dealStringCards() throws DeckException;
-
-    /**
-     * This method will give every Player the corresponding cards as a {@code 2D ArrayList}.
-     * @return Dealed cards as {@code 2D ArrayList}.
-     * @exception DeckException In case you exceed the bound setted for that Deck.
-     */
-    public abstract ArrayList<ArrayList<Integer>> dealArrayListCards() throws DeckException;
 
     /**
      * This getter returns the <b>literal</b> <code>{@literal ArrayList<ArrayList<Integer>>}</code> deck.

@@ -11,20 +11,20 @@ import java.util.Random;
  * @version 1.0
  * @see ArrayList
  * @see Random
- * @see AbstractDeck
+ * @see Deck
  */
-public class PokerDeck extends AbstractDeck{
+public class PokerDeck extends Deck{
 
     /**
      * Empty constructor that automatically loads a <b>Virtual Deck</b>.
-     * @see AbstractDeck
+     * @see Deck
      */
     public PokerDeck(){super();}
 
     /**
      * This constructor allows the user to use a custom <b>Virtual Deck</b>.
      * @param deck The deck you want to play with as <code>{@literal ArrayList<ArrayList<Integer>>}</code>.
-     * @see AbstractDeck
+     * @see Deck
      */
     public PokerDeck(ArrayList<ArrayList<Integer>> deck) {super(deck);}
 

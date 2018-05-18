@@ -7,7 +7,7 @@ import java.util.Random;
  * @author LeCuay
  * @version 0.1 Early
  */
-public class BlackJackDeck extends AbstractDeck {
+public class BlackJackDeck extends Deck {
 
     /**
      * The number of players tha will be playing the game.
